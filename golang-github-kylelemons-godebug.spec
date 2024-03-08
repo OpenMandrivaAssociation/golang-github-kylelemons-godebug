@@ -1,66 +1,58 @@
 # Run tests in check section
 %bcond_without check
 
-%global goipath         github.com/kylelemons/godebug
-%global commit          d65d576e9348f5982d7f6d83682b694e731a45c6
-
-%global common_description %{expand:
-Debugging helper utilities for Go.}
+# https://github.com/kylelemons/godebug
+%global goipath		github.com/kylelemons/godebug
+%global forgeurl	https://github.com/kylelemons/godebug
+Version:		1.1.0
 
 %gometa
 
-Name:    %{goname}
-Version: 0
-Release: 0.4%{?dist}
-Summary: Debugging helper utilities for Go
-License: ASL 2.0
-URL:     %{gourl}
-Source:  %{gosource}
+Summary:	Debugging helper utilities for Go
+Name:		golang-github-kylelemons-godebug
+
+Release:	1
+Source0:	https://github.com/kylelemons/godebug/archive/v%{version}/godebug-%{version}.tar.gz
+URL:		https://github.com/kylelemons/godebug
+License:	ASL 2.0
+Group:		Development/Other
+BuildRequires:	compiler(go-compiler)
+BuildArch:	noarch
 
 %description
-%{common_description}
+Debugging helper utilities for Go.
 
+#-----------------------------------------------------------------------
 
-%package    devel
-Summary:    %{summary}
-BuildArch:  noarch
- 
+%package devel
+Summary:	%{summary}
+Group:		Development/Other
+BuildArch:	noarch
+
 %description devel
-%{common_description}
- 
-This package contains the source code needed for building packages that import
-the %{goipath} Go namespace.
+%{description}
 
-
-%prep
-%gosetup -q
-
-
-%install
-%goinstall
-
-
-%if %{with check}
-%check
-%gochecks
-%endif
-
+This package contains library source intended for
+building other packages which use import path with
+%{goipath} prefix.
 
 %files devel -f devel.file-list
 %license LICENSE
 %doc README.md
 
+#-----------------------------------------------------------------------
 
-%changelog
-* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0-0.4.gitd65d576
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+%prep
+%autosetup -p1 -n godebug-%{version}
 
-* Thu Mar 08 2018 Robert-André Mauchin <zebob.m@gmail.com> - 0-0.3.20180314gitd65d576
-- Update with the new Go packaging
+%build
+%gobuildroot
 
-* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0-0.2.20170820gitd65d576
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+%install
+%goinstall
 
-* Fri Sep 29 2017 Robert-André Mauchin <zebob.m@gmail.com> - 0-0.1.20170820gitd65d576
-- First package for Fedora
+%check
+%if %{with check}
+%gochecks
+%endif
 
